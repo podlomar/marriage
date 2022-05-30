@@ -1,16 +1,3 @@
-const shuffle = (values) => {
-  const result = [...values];
-
-  for (let i = 0; i < result.length; i++) {
-    const index = i + Math.floor(Math.random() * (result.length - i));
-    const temp = result[i];
-    result[i] = result[index];
-    result[index] = temp;
-  }
-
-  return result;
-};
-
 export const generate = (size) => {
   const side1 = [];
   const side2 = [];

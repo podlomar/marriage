@@ -1,7 +1,8 @@
-import { buildInstance } from '../dist/instance.js';
-import { findPairing } from '../dist/pairing.js';
+import { Instance } from '../dist/instance.js';
 
-const instance = buildInstance(4, 10869627);
-const pairing = findPairing(instance);
+const instance = Instance.random(5);
+const code = instance.encode();
 
-console.log(pairing);
+console.info(code);
+console.info(Instance.decode(code).encode());
+

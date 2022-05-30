@@ -54,3 +54,16 @@ export function* permutations<T>(elms: T[]): Generator<T[]> {
     }
   }
 }
+
+export const shuffle = <T>(values: T[]): T[] => {
+  const result = [...values];
+
+  for (let i = 0; i < result.length; i++) {
+    const index = i + Math.floor(Math.random() * (result.length - i));
+    const temp = result[i];
+    result[i] = result[index];
+    result[index] = temp;
+  }
+
+  return result;
+};
