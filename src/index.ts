@@ -35,6 +35,8 @@ const renderInstance = (instance: Instance, inject: string = ''): string => {
   `;
 };
 
+server.use('/', express.static('../web'));
+
 server.get('/random/:size', (req, res) => {
   const { size } = req.params;
   const instance = Instance.random(Number(size));
