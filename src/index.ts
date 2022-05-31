@@ -1,3 +1,4 @@
+import path from 'path';
 import express from 'express';
 import { Instance, instaceCount } from './instance.js';
 import { PrintedInstance } from './printed.js';
@@ -35,7 +36,7 @@ const renderInstance = (instance: Instance, inject: string = ''): string => {
   `;
 };
 
-server.use('/', express.static('../web'));
+server.use('/', express.static('web'));
 
 server.get('/random/:size', (req, res) => {
   const { size } = req.params;
