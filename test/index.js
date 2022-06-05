@@ -1,8 +1,10 @@
-import { Instance } from '../dist/instance.js';
+import { Instance, Pairing } from '../dist/instance.js';
+import { PrintedInstance } from '../dist/printed.js';
 
-const instance = Instance.random(5);
-const code = instance.encode();
+// 4-NtK0cks5bJM
 
-console.info(code);
-console.info(Instance.decode(code).encode());
+const instance = Instance.decode('3-hhJSYYA');
+const printed = new PrintedInstance(instance);
+console.log(printed.print());
+instance.quickAllStablePairings();
 

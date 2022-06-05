@@ -18,14 +18,14 @@ export class PrintedInstance {
     return `${printedAxis}             ${printedAxis}\n`;
   }
 
-  public print(useLetters: boolean) {
+  public print(useLetters: boolean = false) {
     let result = this.printAxis();
   
     for(let i = 0; i < this.instance.size; i++) {
-      const prefsU = this.instance.prefsU[i]
+      const prefsU = this.instance.prefsM[i]
         .map((pref) => printPref(pref, 97, useLetters))
         .join(' ');
-      const prefsL = this.instance.prefsL[i]
+      const prefsL = this.instance.prefsW[i]
         .map((pref) => printPref(pref, 65, useLetters))
         .join(' ');
       result += `${prefsU} | ${printPref(i, 65, useLetters)}/-   ${printPref(i, 97, useLetters)} | ${prefsL}\n`;
@@ -34,17 +34,17 @@ export class PrintedInstance {
     return result;
   }
 
-  public printPairing(pairing: Pairing, useLetters: boolean): string {
+  public printPairing(pairing: Pairing, useLetters: boolean = false): string {
     let result = this.printAxis();
 
     for(let i = 0; i < this.instance.size; i++) {
       const j = pairing.pairs[i];
 
-      const prefsU = this.instance.prefsU[i].map((pref, idx) => (
-        idx < pairing!.scoresU[i] ? ' ' : printPref(pref, 97, useLetters)
+      const prefsU = this.instance.prefsM[i].map((pref, idx) => (
+        idx < pairing!.scoresM[i] ? ' ' : printPref(pref, 97, useLetters)
       )).join(' ');
-      const prefsL = this.instance.prefsL[j].map((pref, idx) => (
-        idx <= pairing!.scoresL[j] ? printPref(pref, 65, useLetters) : ' '
+      const prefsL = this.instance.prefsW[j].map((pref, idx) => (
+        idx <= pairing!.scoresW[j] ? printPref(pref, 65, useLetters) : ' '
       )).join(' ');
   
       result += `${prefsU} | ${printPref(i, 65, useLetters)} --- ${printPref(j, 97, useLetters)} | ${prefsL}\n`;

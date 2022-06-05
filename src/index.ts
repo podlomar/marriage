@@ -1,21 +1,27 @@
-import path from 'path';
 import express from 'express';
-import { Instance, instaceCount } from './instance.js';
+import { Instance, instaceCount, Pairing } from './instance.js';
 import { PrintedInstance } from './printed.js';
 
 const port = process.env.PORT || 2000;
 
 const server = express();
 
+const renderPairings = (pairings: Pairing[]) => pairings.map(
+  (pairing) => (
+    `<pre>${pairing.print()}: ${pairing.totalM} ${pairing.totalW} ${pairing.total}</pre>`
+  )
+).join('');
+
 const renderInstance = (instance: Instance, inject: string = ''): string => {
   const originalPrinted = new PrintedInstance(instance);
-  const pairing = instance.findStablePairing();
-  const solved = originalPrinted.printPairing(pairing, true);
+  const pairing = instance.findNextStablePairing(Pairing.empty(instance.size)) as Pairing;
+  const solved = originalPrinted.printPairing(pairing);
 
-  const stable = instance.findAllStablePairings();
-  const stablePrinted = stable.map((pairing) => (
-    `<pre>${pairing.printAsLetters()}: ${pairing.totalU}/${pairing.weightedU} ${pairing.totalL}/${pairing.weightedL} ${pairing.total}/${pairing.wieghted}</pre>`
-  ));
+  // const brutes = instance.bruteAllStablePairings();
+  // const brutesPrinted = renderPairings(brutes);
+
+  const quicks = instance.quickAllStablePairings();
+  const quicksPrinted = renderPairings(quicks);
 
   return `
     <!DOCTYPE html>
@@ -27,10 +33,11 @@ const renderInstance = (instance: Instance, inject: string = ''): string => {
     </head>
     <body>
       ${inject}
-      <pre>${originalPrinted.print(true)}</pre>
+      <pre>${originalPrinted.print()}</pre>
       <pre>${solved}</pre>
-      <pre>U: ${pairing.totalU}/${pairing.weightedU}, L: ${pairing.totalL}/${pairing.weightedL}, total: ${pairing.total}/${pairing.wieghted}</pre>
-      ${stablePrinted.join('')}
+      <pre>Men: ${pairing.totalM}, Women: ${pairing.totalW}, total: ${pairing.total}</pre>
+      <hr />
+      ${quicksPrinted}
     </body>
     </html>
   `;
@@ -41,6 +48,7 @@ server.use('/', express.static('web'));
 server.get('/random/:size', (req, res) => {
   const { size } = req.params;
   const instance = Instance.random(Number(size));
+  console.log('code', instance.encode());
   const result = renderInstance(instance, `<pre>code: ${instance.encode()}</pre>`);
   res.send(result);
 });
