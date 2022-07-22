@@ -1,4 +1,13 @@
+3-YYSGGSA
+
+code: 8-QmZ9a4M1oT-hWnrBzVgP06pDi5oerOQnYPys-ErRpm7Qj1PQ3FKcDlPWNw6cMa3F
+  From paper
+  23 stable matchings
+
 code: 5-TBgRcDUKYhTIjEKCcLUIiDLChA
+  Best and also perfect egaletarian
+  1 stable matchings
+
 code: 5-UYLEKiLDiBBiaLEUIbgKIjRjCA
 code: 8-PrwUfKlGxQflr3KgBdX0KlD37RwlhT-F0DPVO9Di4rmK5Gal9cRGV4Oc5WgrC8zp
 code: 10-cCFDloVXiTQGEgUWkodDkmgBc0VIJjBXkQNXghRpZ5MoFUACUWc5hINwJGkVITBlSXgjkIFXZDJBeJBlECZTl0iBMCRWeTkkCGFXiTZQdCEEmFIXYwmGFTdCkhh1YwRwWTRhKA

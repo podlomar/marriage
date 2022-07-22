@@ -1,8 +1,12 @@
 import { Instance, Pairing } from "./instance.js";
 
-const printPref = (pref: number, offset: number, useLetters: boolean): string => useLetters 
-  ? String.fromCharCode(offset + pref) 
-  : String(pref);
+const printM = (m: number, useLetters: boolean): string => useLetters 
+  ? String.fromCharCode(65 + m) 
+  : String(m);
+
+const printW = (w: number, size: number, useLetters: boolean): string => useLetters 
+  ? String.fromCharCode(122 - size + 1 + w) 
+  : String(w);
 
 export class PrintedInstance {
   private readonly instance: Instance;
@@ -22,13 +26,13 @@ export class PrintedInstance {
     let result = this.printAxis();
   
     for(let i = 0; i < this.instance.size; i++) {
-      const prefsU = this.instance.prefsM[i]
-        .map((pref) => printPref(pref, 97, useLetters))
+      const prefsM = this.instance.prefsM[i]
+        .map((pref) => printW(pref, this.instance.size, useLetters))
         .join(' ');
-      const prefsL = this.instance.prefsW[i]
-        .map((pref) => printPref(pref, 65, useLetters))
+      const prefsW = this.instance.prefsW[i]
+        .map((pref) => printM(pref, useLetters))
         .join(' ');
-      result += `${prefsU} | ${printPref(i, 65, useLetters)}/-   ${printPref(i, 97, useLetters)} | ${prefsL}\n`;
+      result += `${prefsM} | ${printM(i, useLetters)}/-   ${printW(i, this.instance.size, useLetters)} | ${prefsW}\n`;
     }
     
     return result;
@@ -40,14 +44,14 @@ export class PrintedInstance {
     for(let i = 0; i < this.instance.size; i++) {
       const j = pairing.pairs[i];
 
-      const prefsU = this.instance.prefsM[i].map((pref, idx) => (
-        idx < pairing!.scoresM[i] ? ' ' : printPref(pref, 97, useLetters)
+      const prefsM = this.instance.prefsM[i].map((pref, idx) => (
+        idx < pairing!.scoresM[i] ? ' ' : printW(pref, this.instance.size, useLetters)
       )).join(' ');
-      const prefsL = this.instance.prefsW[j].map((pref, idx) => (
-        idx <= pairing!.scoresW[j] ? printPref(pref, 65, useLetters) : ' '
+      const prefsW = this.instance.prefsW[j].map((pref, idx) => (
+        idx <= pairing!.scoresW[j] ? printM(pref, useLetters) : ' '
       )).join(' ');
   
-      result += `${prefsU} | ${printPref(i, 65, useLetters)} --- ${printPref(j, 97, useLetters)} | ${prefsL}\n`;
+      result += `${prefsM} | ${printM(i, useLetters)} --- ${printW(j, this.instance.size, useLetters)} | ${prefsW}\n`;
     }
     
     return result;

@@ -6,22 +6,22 @@ const port = process.env.PORT || 2000;
 
 const server = express();
 
-const renderPairings = (pairings: Pairing[]) => pairings.map(
+const renderPairings = (pairings: Pairing[], useLetters: boolean) => pairings.map(
   (pairing) => (
-    `<pre>${pairing.print()}: ${pairing.totalM} ${pairing.totalW} ${pairing.total}</pre>`
+    `<pre>${pairing.print(useLetters)}: ${pairing.totalM} ${pairing.totalW} ${pairing.total}</pre>`
   )
 ).join('');
 
-const renderInstance = (instance: Instance, inject: string = ''): string => {
+const renderInstance = (instance: Instance, useLetters: boolean, inject: string = ''): string => {
   const originalPrinted = new PrintedInstance(instance);
   const pairing = instance.findNextStablePairing(Pairing.empty(instance.size)) as Pairing;
-  const solved = originalPrinted.printPairing(pairing);
+  const solved = originalPrinted.printPairing(pairing, useLetters);
 
   // const brutes = instance.bruteAllStablePairings();
   // const brutesPrinted = renderPairings(brutes);
 
   const quicks = instance.quickAllStablePairings();
-  const quicksPrinted = renderPairings(quicks);
+  const quicksPrinted = renderPairings(quicks, useLetters);
 
   return `
     <!DOCTYPE html>
@@ -33,7 +33,7 @@ const renderInstance = (instance: Instance, inject: string = ''): string => {
     </head>
     <body>
       ${inject}
-      <pre>${originalPrinted.print()}</pre>
+      <pre>${originalPrinted.print(useLetters)}</pre>
       <pre>${solved}</pre>
       <pre>Men: ${pairing.totalM}, Women: ${pairing.totalW}, total: ${pairing.total}</pre>
       <hr />
@@ -47,16 +47,19 @@ server.use('/', express.static('web'));
 
 server.get('/random/:size', (req, res) => {
   const { size } = req.params;
+  const { letters } = req.query;
+  
   const instance = Instance.random(Number(size));
   console.log('code', instance.encode());
-  const result = renderInstance(instance, `<pre>code: ${instance.encode()}</pre>`);
+  const result = renderInstance(instance, Boolean(letters), `<pre>code: ${instance.encode()}</pre>`);
   res.send(result);
 });
 
 server.get('/code/:code', (req, res) => {
   const { code } = req.params;
+  const { letters } = req.query;
   const instance = Instance.decode(code);
-  const result = renderInstance(instance, `<pre>code: ${code}</pre>`);
+  const result = renderInstance(instance, Boolean(letters), `<pre>code: ${code}</pre>`);
   res.send(result);
 });
 
@@ -69,17 +72,17 @@ server.get('/gen/:size', (req, res) => {
   res.redirect(`/gen/${size}/${randomOrd}`);
 });
 
-server.get('/gen/:size/:ord', (req, res) => {
-  const { size, ord } = req.params;
-  const count = instaceCount(Number(size));
-  const instance = Instance.fromOrd(Number(size), Number(ord));
-  if (instance === null) {
-    return res.send('No instance');
-  }
-  const result = renderInstance(instance, `<pre>ord: ${ord} of ${count}</pre>`);
+// server.get('/gen/:size/:ord', (req, res) => {
+//   const { size, ord } = req.params;
+//   const count = instaceCount(Number(size));
+//   const instance = Instance.fromOrd(Number(size), Number(ord));
+//   if (instance === null) {
+//     return res.send('No instance');
+//   }
+//   const result = renderInstance(instance, `<pre>ord: ${ord} of ${count}</pre>`);
 
-  res.send(result);
-});
+//   res.send(result);
+// });
 
 server.listen(port, () => {
   console.info(`listening on ${port}...`);
