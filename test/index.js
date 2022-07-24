@@ -1,4 +1,6 @@
-import { Instance, Pairing } from '../dist/instance.js';
+import { encode, decode } from '../dist/encoder.js';
+import { Instance } from '../dist/instance.js';
+import { Pairing } from '../dist/pairing.js';
 import { PrintedInstance } from '../dist/printed.js';
 
 // 4-NtK0cks5bJM
@@ -23,7 +25,9 @@ const instance = new Instance(8, [
   [1, 4, 3, 2, 6, 7, 0, 5],
 ]);
 
-const printed = new PrintedInstance(instance);
 console.log(instance.encode());
-// instance.quickAllStablePairings();
+// // instance.quickAllStablePairings();
 
+const code = instance.encode();
+const newInstance = Instance.decode(code);
+console.log(newInstance);

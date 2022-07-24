@@ -1,6 +1,9 @@
 import express from 'express';
-import { Instance, instaceCount, Pairing } from './instance.js';
+import { promises as fs } from 'fs';
+import { Instance } from './instance.js';
+import { findBestPairing, Pairing } from "./pairing.js";
 import { PrintedInstance } from './printed.js';
+import { PageView } from './render/page.js';
 
 const port = process.env.PORT || 2000;
 
@@ -50,27 +53,66 @@ server.get('/random/:size', (req, res) => {
   const { letters } = req.query;
   
   const instance = Instance.random(Number(size));
-  console.log('code', instance.encode());
   const result = renderInstance(instance, Boolean(letters), `<pre>code: ${instance.encode()}</pre>`);
   res.send(result);
 });
 
-server.get('/code/:code', (req, res) => {
+interface CachedEntry {
+  code: string,
+  size: 5,
+  pairings: string[],
+  note?: string,
+};
+
+server.get('/code/:code', async (req, res) => {
   const { code } = req.params;
   const { letters } = req.query;
+
   const instance = Instance.decode(code);
-  const result = renderInstance(instance, Boolean(letters), `<pre>code: ${code}</pre>`);
-  res.send(result);
-});
-
-server.get('/gen/:size', (req, res) => {
-  const { size } = req.params;
+  const pairings = instance.quickAllStablePairings();
+  const best = findBestPairing(pairings);
   
-  const count = instaceCount(Number(size));
-  const randomOrd = Math.floor(Math.random() * count);
+  pairings.forEach((pairing) => {
+    console.log(pairing.encode())
+  });
 
-  res.redirect(`/gen/${size}/${randomOrd}`);
+  res.send(PageView(instance, `/code/${code}`, best, pairings, { sort: true }));
 });
+
+server.get('/code/:code/:pairingCode', async (req, res) => {
+  const { code, pairingCode } = req.params;
+  const { letters } = req.query;
+
+  const cached = await fs.readFile('cached/index.json', 'utf-8');
+  const entries = JSON.parse(cached) as CachedEntry[];
+  const entry = entries.find((e) => e.code === code);
+  
+  if (entry === undefined) {
+    res.sendStatus(404);
+    return;
+  }
+
+  const instance = Instance.decode(code);
+  // const pairings = instance.quickAllStablePairings();
+  const pairings = entry.pairings.map((code) => Pairing.decode(code));
+  const pairing = Pairing.decode(pairingCode as string);
+  // const best = findBestPairing(pairings);
+
+  // pairings.forEach((pairing) => {
+  //   console.log(pairing)
+  // });
+  
+  res.send(PageView(instance, `/code/${code}`, pairing, pairings, { sort: true }));
+});
+
+// server.get('/gen/:size', (req, res) => {
+//   const { size } = req.params;
+  
+//   const count = instaceCount(Number(size));
+//   const randomOrd = Math.floor(Math.random() * count);
+
+//   res.redirect(`/gen/${size}/${randomOrd}`);
+// });
 
 // server.get('/gen/:size/:ord', (req, res) => {
 //   const { size, ord } = req.params;
@@ -83,6 +125,8 @@ server.get('/gen/:size', (req, res) => {
 
 //   res.send(result);
 // });
+
+server.use(express.static('web'));
 
 server.listen(port, () => {
   console.info(`listening on ${port}...`);

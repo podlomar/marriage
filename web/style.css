@@ -1,31 +1,114 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap");
 
+* {
+  box-sizing: border-box;
+}
+
 html {
   font-family: "Poppins", sans-serif;
 }
 
-h1 {
-  font-weight: 700;
-  font-size: 3rem;
+.container {
+  max-width: 40rem;
+  margin: 0 auto 0 auto;
 }
 
-body {
-  margin: 0;
+.pairings {
+  margin-bottom: 2rem;
 }
 
-.layout {
-  display: grid;
-  min-height: 100vh;
-  grid-template-columns: 1fr 1fr;
+.pairings__score {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 0.5rem;
 }
 
-.layout__left {
-  background-color: #ab96db;
-  text-align: right;
-  padding: 2rem 4rem;
+.pairings__lines {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.layout__right {
-  background-color: #c4f4d6;
-  padding: 8rem 4rem 2rem 4rem;
+.pant {
+  width: 1.3rem;
+  height: 1.3rem;
+  margin: 0.1rem;
+  line-height: 1.2rem;
+  text-align: center;
+}
+
+.pant--big {
+  width: 2rem;
+  height: 2rem;
+  margin: 0.3rem;
+  line-height: 2rem;
+  font-size: 1.2rem;
+  text-align: center;
+}
+
+.spacer {
+  width: 2rem;
+  text-align: center;
+  font-size: 1.5rem;
+}
+
+.line {
+  display: flex;
+  align-items: baseline;
+}
+
+.square {
+  background-color: #143d59;
+  color: white;
+}
+
+.pant--empty.square {
+  background-color: transparent;
+  color: black;
+}
+
+.circle {
+  background-color: #e8c5dd;
+  border-radius: 3px;
+}
+
+.pant--empty.circle {
+  background-color: transparent;
+  color: black;
+}
+
+.score {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: lightblue;
+  padding: 0 0.5rem 0 0.5rem;
+  margin: 0.5rem;
+  width: 6.6rem;
+  border-radius: 3px;
+}
+
+.score--square,
+.score--circle {
+  width: 1.5rem;
+  height: 1.5rem;
+  line-height: 1.5rem;
+  text-align: center;
+}
+
+.score--total {
+  width: 2rem;
+  height: 2rem;
+  line-height: 2rem;
+  font-size: 1.3rem;
+  text-align: center;
+}
+
+.scores-list {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.score-link {
+  text-decoration: none;
 }

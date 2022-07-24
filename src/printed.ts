@@ -1,4 +1,5 @@
-import { Instance, Pairing } from "./instance.js";
+import { Instance } from "./instance.js";
+import { Pairing } from "./pairing.js";
 
 const printM = (m: number, useLetters: boolean): string => useLetters 
   ? String.fromCharCode(65 + m) 
@@ -57,4 +58,3 @@ export class PrintedInstance {
     return result;
   }
 }
-
