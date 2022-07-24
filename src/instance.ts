@@ -1,4 +1,4 @@
-import { factorial, choose, getCombination, permutations, shuffle } from "./comb.js";
+import { permutations, shuffle } from "./comb.js";
 import { encode, decode } from "./encoder.js";
 import { Pairing } from "./pairing.js";
 
@@ -11,27 +11,6 @@ export class Instance {
     this.size = size;
     this.prefsM = prefsM;
     this.prefsW = prefsW;
-  }
-
-  public static fromOrd(size: number, ord: number): Instance | null {
-    const nf = factorial(size);
-    const count = choose(nf + size - 1, size);
-    const total = count * count;
-  
-    if (ord < 0 || ord > (total - 1)) {
-      return null;
-    }
-  
-    const i = Math.floor(ord / count);
-    const j = ord % count;
-    const elms = new Array(size).fill(null).map((_, i) => i);
-  
-    let iter = permutations(elms);
-    const prefsM = getCombination(iter, iter.next().value, i, nf, size) as number[][];
-    iter = permutations(elms);
-    const prefsW = getCombination(iter, iter.next().value, j, nf, size) as number[][];
-  
-    return new Instance(size, prefsM, prefsW);
   }
 
   public static random(size: number): Instance {

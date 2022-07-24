@@ -1,4 +1,3 @@
-import { factorial, choose, getCombination, permutations, shuffle } from "./comb.js";
 import { decode, encode } from "./encoder.js";
 import type { Instance } from "./instance.js";
 
